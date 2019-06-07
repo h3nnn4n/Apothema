@@ -1,6 +1,5 @@
-use phf::phf_map;
-
 use super::{Corner, Corners, Edge, Edges, Move, OrientedCorner, OrientedEdge};
+use phf::phf_map;
 
 pub fn get_table_for(m: Move) -> (Edges, Corners) {
     let move_str = m.to_string();
