@@ -1,4 +1,5 @@
 use super::*;
+use std::collections::HashMap;
 
 mod initial_state {
     use super::*;
@@ -42,51 +43,81 @@ mod initial_state {
     }
 }
 
-mod r_moves {
+mod parametrized_moves {
     use super::*;
 
+    const MOVES: [Move; 6] = [
+        Move::Rx1,
+        Move::Lx1,
+        Move::Fx1,
+        Move::Bx1,
+        Move::Ux1,
+        Move::Dx1,
+    ];
+
     #[test]
-    fn test_rx1_has_diameter_4() {
-        let mut cube = Cube::new();
-        let before_edges = cube.edges;
-        let before_corners = cube.corners;
+    fn test_move_diameter() {
+        let mut move_diameter = HashMap::new();
 
-        for _ in 0..4 {
-            cube.do_move(Move::Rx1);
-        }
+        move_diameter.insert(Move::Rx1, 4);
+        move_diameter.insert(Move::Lx1, 4);
+        move_diameter.insert(Move::Fx1, 4);
+        move_diameter.insert(Move::Bx1, 4);
+        move_diameter.insert(Move::Ux1, 4);
+        move_diameter.insert(Move::Dx1, 4);
 
-        for index in 0..12 {
-            assert_eq!(before_edges[index], cube.edges[index]);
-        }
+        for m in MOVES.iter() {
+            let mut cube = Cube::new();
+            let before_edges = cube.edges;
+            let before_corners = cube.corners;
+            let diameter = move_diameter[m];
 
-        for index in 0..8 {
-            assert_eq!(before_corners[index], cube.corners[index]);
+            for _ in 0..diameter {
+                cube.do_move(*m);
+            }
+
+            assert_eq!(before_edges, cube.edges, "edges dont match");
+            assert_eq!(before_corners, cube.corners, "corners dont match");
         }
     }
 
     #[test]
-    fn test_rx1_move_affects_the_cube() {
-        let mut cube = Cube::new();
-        let before_edge = cube.edges[Edge::UR as usize];
-        let before_corner = cube.corners[Corner::URF as usize];
+    fn test_move_affects_the_cube() {
+        for m in MOVES.iter() {
+            let mut cube = Cube::new();
+            let edges_before = cube.edges;
+            let corners_before = cube.corners;
 
-        cube.do_move(Move::Rx1);
+            cube.do_move(*m);
 
-        assert_ne!(before_edge, cube.edges[Edge::UR as usize]);
-        assert_ne!(before_corner, cube.corners[Corner::URF as usize]);
+            assert_ne!(edges_before, cube.edges);
+            assert_ne!(corners_before, cube.corners);
+        }
     }
 
     #[test]
-    fn test_rx1_keeps_cube_valid() {
-        let cube = Cube::new();
+    fn test_moves_keep_cube_valid() {
+        for m in MOVES.iter() {
+            let mut cube = Cube::new();
 
-        assert!(has_no_duplicates(&cube));
-        assert!(has_correct_orientation(&cube);
+            assert!(has_no_duplicates(&cube));
+            assert!(has_correct_orientation(&cube));
 
-        cube.do_move(Move::Rx1);
+            for _ in 0..12 {
+                cube.do_move(*m);
+            }
 
-        assert!(has_no_duplicates(&cube));
-        assert!(has_correct_orientation(&cube);
+            assert!(
+                has_no_duplicates(&cube),
+                "cube has duplicated elements after move {}",
+                m
+            );
+            assert!(
+                has_correct_orientation(&cube),
+                "cube has incorrect orientation after move {}",
+                m
+            );
+        }
     }
 }
 
