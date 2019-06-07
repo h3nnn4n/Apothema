@@ -34,29 +34,32 @@ mod r_moves {
     #[test]
     fn test_rx1_has_diameter_4() {
         let mut cube = Cube::new();
-        let before = cube.edges;
+        let before_edges = cube.edges;
+        let before_corners = cube.corners;
 
         for _ in 0..4 {
             cube.do_move(Move::Rx1);
         }
 
-        let after = cube.edges;
-
         for index in 0..12 {
-            assert_eq!(before[index], after[index]);
+            assert_eq!(before_edges[index], cube.edges[index]);
+        }
+
+        for index in 0..8 {
+            assert_eq!(before_corners[index], cube.corners[index]);
         }
     }
 
     #[test]
     fn test_rx1_move_affects_the_cube() {
         let mut cube = Cube::new();
-        let before = cube.edges[Edge::UR as usize];
+        let before_edge = cube.edges[Edge::UR as usize];
+        let before_corner = cube.corners[Corner::URF as usize];
 
         cube.do_move(Move::Rx1);
 
-        let after = cube.edges[Edge::UR as usize];
-
-        assert_ne!(before, after);
+        assert_ne!(before_edge, cube.edges[Edge::UR as usize]);
+        assert_ne!(before_corner, cube.corners[Corner::URF as usize]);
     }
 
     #[test]
