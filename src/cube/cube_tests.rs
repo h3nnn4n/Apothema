@@ -1,5 +1,25 @@
 use super::*;
 use std::collections::HashMap;
+use test_case_derive::test_case;
+
+#[test_case(Move::Rx1,  4 :: "Move::Rx1")]
+#[test_case(Move::Lx1,  4 :: "Move::Lx1")]
+#[test_case(Move::Ux1,  4 :: "Move::Ux1")]
+#[test_case(Move::Dx1,  4 :: "Move::Dx1")]
+#[test_case(Move::Fx1,  4 :: "Move::Fx1")]
+#[test_case(Move::Bx1,  4 :: "Move::Bx1")]
+fn move_diameter(m: Move, diameter: u32) {
+    let mut cube = Cube::new();
+    let before_edges = cube.edges;
+    let before_corners = cube.corners;
+
+    for _ in 0..diameter {
+        cube.do_move(m);
+    }
+
+    assert_eq!(before_edges, cube.edges, "edges dont match");
+    assert_eq!(before_corners, cube.corners, "corners dont match");
+}
 
 mod initial_state {
     use super::*;
@@ -54,32 +74,6 @@ mod parametrized_moves {
         Move::Ux1,
         Move::Dx1,
     ];
-
-    #[test]
-    fn test_move_diameter() {
-        let mut move_diameter = HashMap::new();
-
-        move_diameter.insert(Move::Rx1, 4);
-        move_diameter.insert(Move::Lx1, 4);
-        move_diameter.insert(Move::Fx1, 4);
-        move_diameter.insert(Move::Bx1, 4);
-        move_diameter.insert(Move::Ux1, 4);
-        move_diameter.insert(Move::Dx1, 4);
-
-        for m in MOVES.iter() {
-            let mut cube = Cube::new();
-            let before_edges = cube.edges;
-            let before_corners = cube.corners;
-            let diameter = move_diameter[m];
-
-            for _ in 0..diameter {
-                cube.do_move(*m);
-            }
-
-            assert_eq!(before_edges, cube.edges, "edges dont match");
-            assert_eq!(before_corners, cube.corners, "corners dont match");
-        }
-    }
 
     #[test]
     fn test_move_affects_the_cube() {
