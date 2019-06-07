@@ -26,6 +26,20 @@ mod initial_state {
             }
         }
     }
+
+    #[test]
+    fn test_correct_edge_orientation() {
+        let cube = Cube::new();
+
+        assert!(has_correct_edge_orientation(&cube));
+    }
+
+    #[test]
+    fn test_correct_corder_orientation() {
+        let cube = Cube::new();
+
+        assert!(has_correct_corner_orientation(&cube));
+    }
 }
 
 mod r_moves {
@@ -64,15 +78,15 @@ mod r_moves {
 
     #[test]
     fn test_rx1_keeps_cube_valid() {
-        let mut cube = Cube::new();
+        let cube = Cube::new();
 
         assert!(has_no_duplicates(&cube));
-        println_edges(cube.edges);
+        assert!(has_correct_orientation(&cube);
 
         cube.do_move(Move::Rx1);
 
-        println_edges(cube.edges);
         assert!(has_no_duplicates(&cube));
+        assert!(has_correct_orientation(&cube);
     }
 }
 
@@ -92,6 +106,32 @@ fn println_edges(edges: Edges) {
         edges[10],
         edges[11],
     );
+}
+
+fn has_correct_orientation(cube: &Cube) -> bool {
+    has_correct_edge_orientation(cube) && has_correct_corner_orientation(cube)
+}
+
+fn has_correct_edge_orientation(cube: &Cube) -> bool {
+    let edges = cube.edges;
+    let mut orientation = 0;
+
+    for edge in edges.iter() {
+        orientation += edge.o;
+    }
+
+    orientation % 2 == 0
+}
+
+fn has_correct_corner_orientation(cube: &Cube) -> bool {
+    let corners = cube.corners;
+    let mut orientation = 0;
+
+    for corner in corners.iter() {
+        orientation += corner.o;
+    }
+
+    orientation % 3 == 0
 }
 
 fn has_no_duplicates(cube: &Cube) -> bool {

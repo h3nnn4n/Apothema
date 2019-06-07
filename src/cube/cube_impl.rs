@@ -11,14 +11,7 @@ impl Cube {
     }
 
     pub fn do_move(&mut self, m: Move) {
-        match m {
-            Move::Rx1 => self.move_r(),
-            _ => panic!(),
-        }
-    }
-
-    pub fn move_r(&mut self) {
-        let (edge_move_table, corner_move_table) = &move_table::get_table_for(Move::Rx1);
+        let (edge_move_table, corner_move_table) = &move_table::get_table_for(m);
 
         self.edge_multiply(edge_move_table);
         self.corner_multiply(corner_move_table);
