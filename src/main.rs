@@ -10,6 +10,8 @@ extern crate phf;
 
 mod cube;
 
+use cube::*;
+
 fn main() {
     println!("Apothema!");
 }

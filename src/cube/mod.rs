@@ -8,6 +8,7 @@ mod move_sequence_types;
 mod move_sequence_utils;
 mod move_table;
 mod move_utils;
+mod print_move_table;
 
 pub use cube_display::*;
 pub use cube_impl::*;
@@ -18,6 +19,7 @@ pub use move_sequence_types::*;
 pub use move_sequence_utils::*;
 pub use move_table::*;
 pub use move_utils::*;
+pub use print_move_table::{print_corner_move_table, print_edge_move_table};
 
 #[cfg(test)]
 mod cube_tests;

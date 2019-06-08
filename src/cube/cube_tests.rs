@@ -43,6 +43,7 @@ const MOVES: [Move; 18] = [
 #[test_case(Move::Bx1, 4 :: "Move::Bx1")]
 #[test_case(Move::Bx2, 2 :: "Move::Bx2")]
 #[test_case(Move::Bx3, 4 :: "Move::Bx3")]
+#[test_case(Move::NOP, 1 :: "Move::NOP")]
 fn move_diameter(m: Move, diameter: u32) {
     let mut cube = Cube::new();
     let before_edges = cube.edges;
@@ -104,6 +105,19 @@ mod initial_state {
         let cube = Cube::new();
 
         assert!(cube.has_correct_corner_orientation());
+    }
+
+    #[test]
+    fn nop_move_does_nothing() {
+        let mut cube = Cube::new();
+
+        assert!(cube.is_valid());
+        assert!(cube.is_solved());
+
+        cube.do_move(Move::NOP);
+
+        assert!(cube.is_valid());
+        assert!(cube.is_solved());
     }
 }
 
