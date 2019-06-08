@@ -126,15 +126,13 @@ mod parametrized_moves {
 
     #[test]
     fn test_move_has_oposite() {
-        let solved_cube = Cube::new();
-
         for m in MOVES.iter() {
             let mut cube = Cube::new();
 
             cube.do_move(*m);
             cube.do_move(move_utils::reverse_move(*m));
 
-            assert_eq!(cube, solved_cube, "failed for move {}", *m);
+            assert!(cube.is_solved(), "failed for move {}", *m);
         }
     }
 
@@ -185,18 +183,17 @@ mod move_sequence {
     fn move_sequence_is_reversible() {
         let mut rng = thread_rng();
         let mut cube = Cube::new();
-        let solved_cube: Cube = Cube::new();
 
         let sequence: Moves = MOVES.choose_multiple(&mut rng, 15).cloned().collect();
         let reverse_sequence = reverse_move_sequence(sequence.clone());
 
         cube.do_move_sequence(&sequence);
 
-        assert_ne!(cube, solved_cube);
+        assert!(!cube.is_solved());
 
         cube.do_move_sequence(&reverse_sequence);
 
-        assert_eq!(cube, solved_cube);
+        assert!(cube.is_solved());
     }
 
     #[test]

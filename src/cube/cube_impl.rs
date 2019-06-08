@@ -10,6 +10,12 @@ impl Cube {
         }
     }
 
+    pub fn is_solved(&self) -> bool {
+        let (edges, corners) = move_table::get_table_for(Move::NOP);
+
+        self.edges == edges && self.corners == corners
+    }
+
     pub fn do_move(&mut self, m: Move) {
         match m {
             Move::Rx1 | Move::Lx1 | Move::Fx1 | Move::Bx1 | Move::Ux1 | Move::Dx1 => {
