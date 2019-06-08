@@ -2,10 +2,11 @@
 #![feature(proc_macro_hygiene)]
 
 extern crate num;
+extern crate rand;
+extern crate test_case_derive;
 #[macro_use]
 extern crate enum_primitive;
 extern crate phf;
-extern crate test_case_derive;
 
 mod cube;
 

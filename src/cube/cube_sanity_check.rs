@@ -1,6 +1,10 @@
 use super::Cube;
 
 impl Cube {
+    pub fn is_valid(&self) -> bool {
+        self.has_correct_orientation() && self.has_no_duplicated_pieces()
+    }
+
     pub fn has_correct_orientation(&self) -> bool {
         has_correct_orientation(self)
     }

@@ -1,5 +1,29 @@
 use super::*;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
+use std::collections::HashMap;
 use test_case_derive::test_case;
+
+const MOVES: [Move; 18] = [
+    Move::Rx1,
+    Move::Rx2,
+    Move::Rx3,
+    Move::Lx1,
+    Move::Lx2,
+    Move::Lx3,
+    Move::Fx1,
+    Move::Fx2,
+    Move::Fx3,
+    Move::Bx1,
+    Move::Bx2,
+    Move::Bx3,
+    Move::Ux1,
+    Move::Ux2,
+    Move::Ux3,
+    Move::Dx1,
+    Move::Dx2,
+    Move::Dx3,
+];
 
 #[test_case(Move::Rx1, 4 :: "Move::Rx1")]
 #[test_case(Move::Rx2, 2 :: "Move::Rx2")]
@@ -86,27 +110,6 @@ mod initial_state {
 mod parametrized_moves {
     use super::*;
 
-    const MOVES: [Move; 18] = [
-        Move::Rx1,
-        Move::Rx2,
-        Move::Rx3,
-        Move::Lx1,
-        Move::Lx2,
-        Move::Lx3,
-        Move::Fx1,
-        Move::Fx2,
-        Move::Fx3,
-        Move::Bx1,
-        Move::Bx2,
-        Move::Bx3,
-        Move::Ux1,
-        Move::Ux2,
-        Move::Ux3,
-        Move::Dx1,
-        Move::Dx2,
-        Move::Dx3,
-    ];
-
     #[test]
     fn test_move_affects_the_cube() {
         for m in MOVES.iter() {
@@ -156,6 +159,79 @@ mod parametrized_moves {
                 cube.has_correct_orientation(),
                 "cube has incorrect orientation after move {}",
                 m
+            );
+        }
+    }
+
+    #[test]
+    fn random_moves_keeps_cube_valid() {
+        let mut cube = Cube::new();
+        let mut rng = thread_rng();
+
+        for _ in 0..1000 {
+            let m = MOVES.choose(&mut rng).unwrap();
+
+            cube.do_move(*m);
+
+            assert!(cube.is_valid());
+        }
+    }
+}
+
+mod move_sequence {
+    use super::*;
+
+    #[test]
+    fn move_sequence_is_reversible() {
+        let mut rng = thread_rng();
+        let mut cube = Cube::new();
+        let solved_cube: Cube = Cube::new();
+
+        let sequence: Moves = MOVES.choose_multiple(&mut rng, 15).cloned().collect();
+        let reverse_sequence = reverse_move_sequence(sequence.clone());
+
+        cube.do_move_sequence(&sequence);
+
+        assert_ne!(cube, solved_cube);
+
+        cube.do_move_sequence(&reverse_sequence);
+
+        assert_eq!(cube, solved_cube);
+    }
+
+    #[test]
+    fn move_sequence_diameter() {
+        let mut sequence_book: HashMap<Moves, u32> = HashMap::new();
+        sequence_book.insert(vec![Move::Rx1, Move::Ux1, Move::Rx3, Move::Ux3], 6);
+        sequence_book.insert(vec![Move::Rx2], 2);
+        sequence_book.insert(vec![Move::Ux1], 4);
+        sequence_book.insert(
+            vec![
+                Move::Rx1,
+                Move::Ux1,
+                Move::Rx3,
+                Move::Ux3,
+                Move::Rx3,
+                Move::Fx1,
+                Move::Rx2,
+                Move::Ux3,
+                Move::Rx3,
+                Move::Ux3,
+                Move::Rx1,
+                Move::Ux1,
+                Move::Rx3,
+                Move::Fx3,
+            ],
+            2,
+        );
+
+        for (seq, diameter) in sequence_book {
+            let diameter_found = find_move_sequence_diameter(&seq);
+
+            assert_eq!(
+                diameter_found, diameter,
+                "failed for sequence {:?} with expected diameter of {}, but had {}",
+                seq, diameter, diameter_found
             );
         }
     }
