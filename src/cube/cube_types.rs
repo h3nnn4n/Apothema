@@ -63,6 +63,7 @@ pub struct OrientedEdge {
     pub o: u32,
 }
 
+#[derive(PartialEq, Debug)]
 pub struct Cube {
     pub corners: [OrientedCorner; 8],
     pub edges: [OrientedEdge; 12],

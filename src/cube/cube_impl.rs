@@ -11,7 +11,35 @@ impl Cube {
     }
 
     pub fn do_move(&mut self, m: Move) {
-        let (edge_move_table, corner_move_table) = &move_table::get_table_for(m);
+        match m {
+            Move::Rx1 | Move::Lx1 | Move::Fx1 | Move::Bx1 | Move::Ux1 | Move::Dx1 => {
+                self.do_move_once(m);
+            }
+            Move::Rx2 | Move::Lx2 | Move::Fx2 | Move::Bx2 | Move::Ux2 | Move::Dx2 => {
+                self.do_move_once(m);
+                self.do_move_once(m);
+            }
+            Move::Rx3 | Move::Lx3 | Move::Fx3 | Move::Bx3 | Move::Ux3 | Move::Dx3 => {
+                self.do_move_once(m);
+                self.do_move_once(m);
+                self.do_move_once(m);
+            }
+            Move::NOP => (),
+        }
+    }
+
+    fn do_move_once(&mut self, m: Move) {
+        let m_single = match m {
+            Move::Rx1 | Move::Rx2 | Move::Rx3 => Move::Rx1,
+            Move::Lx1 | Move::Lx2 | Move::Lx3 => Move::Lx1,
+            Move::Fx1 | Move::Fx2 | Move::Fx3 => Move::Fx1,
+            Move::Bx1 | Move::Bx2 | Move::Bx3 => Move::Bx1,
+            Move::Ux1 | Move::Ux2 | Move::Ux3 => Move::Ux1,
+            Move::Dx1 | Move::Dx2 | Move::Dx3 => Move::Dx1,
+            Move::NOP => Move::NOP,
+        };
+
+        let (edge_move_table, corner_move_table) = &move_table::get_table_for(m_single);
 
         self.edge_multiply(edge_move_table);
         self.corner_multiply(corner_move_table);
