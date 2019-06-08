@@ -233,21 +233,3 @@ mod move_sequence {
         }
     }
 }
-
-fn println_edges(edges: Edges) {
-    println!(
-        "{} {} {} {} {} {} {} {} {} {} {} {}",
-        edges[0],
-        edges[1],
-        edges[2],
-        edges[3],
-        edges[4],
-        edges[5],
-        edges[6],
-        edges[7],
-        edges[8],
-        edges[9],
-        edges[10],
-        edges[11],
-    );
-}
