@@ -214,8 +214,19 @@ mod move_sequence {
     fn move_sequence_diameter() {
         let mut sequence_book: HashMap<Moves, u32> = HashMap::new();
         sequence_book.insert(vec![Move::Rx1, Move::Ux1, Move::Rx3, Move::Ux3], 6);
-        sequence_book.insert(vec![Move::Rx2], 2);
-        sequence_book.insert(vec![Move::Ux1], 4);
+        sequence_book.insert(vec![Move::Rx3, Move::Ux1, Move::Rx1, Move::Ux3], 6);
+        sequence_book.insert(vec![Move::Fx1, Move::Ux1, Move::Fx3, Move::Ux3], 6);
+        sequence_book.insert(vec![Move::Fx3, Move::Ux1, Move::Fx1, Move::Ux3], 6);
+        sequence_book.insert(vec![Move::Lx1, Move::Ux1, Move::Lx3, Move::Ux3], 6);
+        sequence_book.insert(vec![Move::Lx3, Move::Ux1, Move::Lx1, Move::Ux3], 6);
+        sequence_book.insert(vec![Move::Lx1, Move::Bx1, Move::Lx3, Move::Bx3], 6);
+        sequence_book.insert(vec![Move::Ux3, Move::Bx1, Move::Ux1, Move::Bx3], 6);
+        sequence_book.insert(vec![Move::Rx1, Move::Dx1, Move::Rx3, Move::Dx3], 6);
+        sequence_book.insert(vec![Move::Rx3, Move::Dx1, Move::Rx1, Move::Dx3], 6);
+        sequence_book.insert(vec![Move::Fx1, Move::Dx1, Move::Fx3, Move::Dx3], 6);
+        sequence_book.insert(vec![Move::Fx3, Move::Dx1, Move::Fx1, Move::Dx3], 6);
+        sequence_book.insert(vec![Move::Lx1, Move::Dx1, Move::Lx3, Move::Dx3], 6);
+        sequence_book.insert(vec![Move::Lx3, Move::Dx1, Move::Lx1, Move::Dx3], 6);
         sequence_book.insert(
             vec![
                 Move::Rx1,
