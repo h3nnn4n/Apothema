@@ -1,12 +1,14 @@
 #![allow(dead_code)]
 mod cube_display;
 mod cube_impl;
+mod cube_sanity_check;
 mod cube_types;
 mod move_table;
 mod move_utils;
 
 pub use cube_display::*;
 pub use cube_impl::*;
+pub use cube_sanity_check::*;
 pub use cube_types::*;
 pub use move_table::*;
 pub use move_utils::*;

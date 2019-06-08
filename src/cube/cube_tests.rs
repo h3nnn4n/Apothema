@@ -72,14 +72,14 @@ mod initial_state {
     fn test_correct_edge_orientation() {
         let cube = Cube::new();
 
-        assert!(has_correct_edge_orientation(&cube));
+        assert!(cube.has_correct_edge_orientation());
     }
 
     #[test]
     fn test_correct_corder_orientation() {
         let cube = Cube::new();
 
-        assert!(has_correct_corner_orientation(&cube));
+        assert!(cube.has_correct_corner_orientation());
     }
 }
 
@@ -140,20 +140,20 @@ mod parametrized_moves {
         for m in MOVES.iter() {
             let mut cube = Cube::new();
 
-            assert!(has_no_duplicates(&cube));
-            assert!(has_correct_orientation(&cube));
+            assert!(cube.has_no_duplicated_pieces());
+            assert!(cube.has_correct_orientation());
 
             for _ in 0..12 {
                 cube.do_move(*m);
             }
 
             assert!(
-                has_no_duplicates(&cube),
+                cube.has_no_duplicated_pieces(),
                 "cube has duplicated elements after move {}",
                 m
             );
             assert!(
-                has_correct_orientation(&cube),
+                cube.has_correct_orientation(),
                 "cube has incorrect orientation after move {}",
                 m
             );
@@ -177,53 +177,4 @@ fn println_edges(edges: Edges) {
         edges[10],
         edges[11],
     );
-}
-
-fn has_correct_orientation(cube: &Cube) -> bool {
-    has_correct_edge_orientation(cube) && has_correct_corner_orientation(cube)
-}
-
-fn has_correct_edge_orientation(cube: &Cube) -> bool {
-    let edges = cube.edges;
-    let mut orientation = 0;
-
-    for edge in edges.iter() {
-        orientation += edge.o;
-    }
-
-    orientation % 2 == 0
-}
-
-fn has_correct_corner_orientation(cube: &Cube) -> bool {
-    let corners = cube.corners;
-    let mut orientation = 0;
-
-    for corner in corners.iter() {
-        orientation += corner.o;
-    }
-
-    orientation % 3 == 0
-}
-
-fn has_no_duplicates(cube: &Cube) -> bool {
-    let corners = cube.corners;
-    let edges = cube.edges;
-
-    for i in 0..11 {
-        for j in i + 1..12 {
-            if edges[i] == edges[j] {
-                return false;
-            }
-        }
-    }
-
-    for i in 0..7 {
-        for j in i + 1..8 {
-            if corners[i] == corners[j] {
-                return false;
-            }
-        }
-    }
-
-    true
 }

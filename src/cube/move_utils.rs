@@ -1,4 +1,4 @@
-use super::*;
+use super::{Cube, Move};
 
 pub fn reverse_move(m: Move) -> Move {
     match m {
@@ -28,4 +28,22 @@ pub fn reverse_move(m: Move) -> Move {
 
         Move::NOP => Move::NOP,
     }
+}
+
+pub fn find_move_diameter(m: Move) -> u32 {
+    let mut cube = Cube::new();
+    let solved_cube = Cube::new();
+
+    let mut counter = 0;
+
+    loop {
+        cube.do_move(m);
+        counter += 1;
+
+        if cube == solved_cube {
+            break;
+        }
+    }
+
+    counter
 }
