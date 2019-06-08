@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+mod benchmarks;
 mod cube_display;
 mod cube_impl;
 mod cube_sanity_check;
@@ -10,6 +11,7 @@ mod move_table;
 mod move_utils;
 mod print_move_table;
 
+pub use benchmarks::fixed_move_per_sec;
 pub use cube_display::*;
 pub use cube_impl::*;
 pub use cube_sanity_check::*;
