@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 mod benchmarks;
 mod cube_display;
+mod cube_encoding;
 mod cube_impl;
 mod cube_sanity_check;
 mod cube_types;
@@ -13,6 +14,7 @@ mod print_move_table;
 
 pub use benchmarks::{fixed_move_per_sec, random_move_per_sec};
 pub use cube_display::*;
+pub use cube_encoding::*;
 pub use cube_impl::*;
 pub use cube_sanity_check::*;
 pub use cube_types::*;
@@ -23,5 +25,7 @@ pub use move_table::*;
 pub use move_utils::*;
 pub use print_move_table::{print_corner_move_table, print_edge_move_table};
 
+#[cfg(test)]
+mod cube_encoding_tests;
 #[cfg(test)]
 mod cube_tests;

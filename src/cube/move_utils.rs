@@ -1,4 +1,4 @@
-use super::{Cube, Move};
+use super::{Cube, Move, Moves};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 
@@ -27,6 +27,12 @@ pub fn get_random_move() -> Move {
     let mut rng = thread_rng();
 
     *MOVES.choose(&mut rng).unwrap()
+}
+
+pub fn get_random_move_sequence(lenght: usize) -> Moves {
+    let mut rng = thread_rng();
+
+    MOVES.choose_multiple(&mut rng, lenght).cloned().collect()
 }
 
 pub fn reverse_move(m: Move) -> Move {
