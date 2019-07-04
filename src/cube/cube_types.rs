@@ -1,3 +1,4 @@
+enum_from_primitive! {
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub enum Move {
     Ux1,
@@ -19,7 +20,7 @@ pub enum Move {
     Bx2,
     Bx3,
     NOP,
-}
+}}
 
 enum_from_primitive! {
 #[derive(Copy, Clone, PartialEq, Debug)]
