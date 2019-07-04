@@ -2,6 +2,7 @@ use num::FromPrimitive;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::collections::VecDeque;
+use std::time::{Duration, Instant};
 
 use crate::cube::{reduntant_move, Cube, Move};
 
@@ -16,7 +17,20 @@ pub fn bfs_solver(starting_cube: &Cube) -> Vec<Move> {
 
     queue.push_back((starting_cube.cube_to_tuple(), Move::NOP));
 
+    let t_start = Instant::now();
+    let mut t_timer = t_start;
+    let t_delta = Duration::from_millis(1000);
+
     loop {
+        let t_current = Instant::now();
+        let t_diff = t_current.duration_since(t_timer);
+
+        if t_diff > t_delta {
+            t_timer = Instant::now();
+            let time_elapsed = t_current.duration_since(t_start);
+            print_status(&queue, &visited, time_elapsed);
+        }
+
         if queue.len() == 0 {
             panic!("Unsovable cube!");
         } else {
@@ -33,6 +47,9 @@ pub fn bfs_solver(starting_cube: &Cube) -> Vec<Move> {
                 if cube.is_solved() {
                     reverse_path.insert(cube.cube_to_tuple(), (cube_i, mov));
 
+                    let time_elapsed = t_current.duration_since(t_start);
+                    print_status(&queue, &visited, time_elapsed);
+
                     return get_path(starting_cube, reverse_path);
                 }
 
@@ -46,6 +63,24 @@ pub fn bfs_solver(starting_cube: &Cube) -> Vec<Move> {
             }
         }
     }
+}
+
+fn print_status(
+    queue: &VecDeque<((u64, u64), Move)>,
+    visited: &HashSet<(u64, u64)>,
+    t_diff: std::time::Duration,
+) {
+    let time = (t_diff.as_secs() as f64) + (t_diff.subsec_millis() as f64 / 1000.0);
+    let moves_per_sec = (visited.len() as f64) / time;
+
+    println!(
+        "time_elapsed: {:4}.{:03}    nodes_visited: {:12}    queue_size: {:12}    moves_per_sec: {:8.0}",
+        t_diff.as_secs(),
+        t_diff.subsec_millis(),
+        visited.len(),
+        queue.len(),
+        moves_per_sec
+    );
 }
 
 fn get_path(target_cube: &Cube, path_graph: HashMap<(u64, u64), ((u64, u64), Move)>) -> Vec<Move> {
