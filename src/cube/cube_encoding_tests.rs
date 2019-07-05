@@ -5,28 +5,16 @@ mod as_u64 {
 
     #[test]
     fn solved_edge_orientation_is_zero() {
-        let mut cube = Cube::new();
+        let cube = Cube::new();
 
         assert_eq!(cube.edge_orientation_as_u64(), 0);
-
-        let random_moves = get_random_move_sequence(10);
-        cube.do_move_sequence(&random_moves);
-
-        assert!(!cube.is_solved());
-        assert_ne!(cube.edge_orientation_as_u64(), 0);
     }
 
     #[test]
     fn solved_corner_orientation_is_zero() {
-        let mut cube = Cube::new();
+        let cube = Cube::new();
 
         assert_eq!(cube.corner_orientation_as_u64(), 0);
-
-        let random_moves = get_random_move_sequence(10);
-        cube.do_move_sequence(&random_moves);
-
-        assert!(!cube.is_solved());
-        assert_ne!(cube.corner_orientation_as_u64(), 0);
     }
 
     #[test]
@@ -207,15 +195,9 @@ mod ud_slice {
 
     #[test]
     fn solved_is_zero() {
-        let mut cube = Cube::new();
+        let cube = Cube::new();
 
         assert_eq!(cube.ud_slice_as_u64(), 0);
-
-        let random_moves = get_random_move_sequence(10);
-        cube.do_move_sequence(&random_moves);
-
-        assert!(!cube.is_solved());
-        assert_ne!(cube.ud_slice_as_u64(), 0);
     }
 
     #[test]
@@ -235,15 +217,9 @@ mod sorted_ud_slice {
 
     #[test]
     fn solved_is_zero() {
-        let mut cube = Cube::new();
+        let cube = Cube::new();
 
         assert_eq!(cube.sorted_ud_slice_as_u64(), 0);
-
-        let random_moves = get_random_move_sequence(10);
-        cube.do_move_sequence(&random_moves);
-
-        assert!(!cube.is_solved());
-        assert_ne!(cube.sorted_ud_slice_as_u64(), 0);
     }
 
     #[test]
