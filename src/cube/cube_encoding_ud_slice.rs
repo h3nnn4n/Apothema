@@ -24,10 +24,12 @@ impl Cube {
             }
         }
 
-        for j in (1..3).rev() {
+        // This loops j from 3 to 1 and k from j-1 to 0
+        // Not the most readable
+        for j in (1..4).rev() {
             let mut s: u64 = 0;
 
-            for k in (0..(j - 1)).rev() {
+            for k in (0..j).rev() {
                 if ud_edges[k] > ud_edges[j] {
                     s += 1;
                 }
