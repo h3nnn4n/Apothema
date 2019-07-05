@@ -1,5 +1,31 @@
 use super::*;
 
+mod as_u64 {
+    use super::*;
+
+    #[test]
+    fn test_edge_encoding() {
+        let cube = Cube::new();
+
+        let edge_tuple = cube.edges_to_tuple();
+        let edge_orientation = cube.edge_orientation_as_u64();
+        let edge_permutation = cube.edge_permutation_as_u64();
+
+        assert_eq!(edge_tuple, (edge_permutation, edge_orientation));
+    }
+
+    #[test]
+    fn test_corner_encoding() {
+        let cube = Cube::new();
+
+        let corner_tuple = cube.corners_to_tuple();
+        let corner_orientation = cube.corner_orientation_as_u64();
+        let corner_permutation = cube.corner_permutation_as_u64();
+
+        assert_eq!(corner_tuple, (corner_permutation, corner_orientation));
+    }
+}
+
 mod tuple {
     use super::*;
 
