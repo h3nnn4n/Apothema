@@ -217,6 +217,17 @@ mod ud_slice {
         assert!(!cube.is_solved());
         assert_ne!(cube.ud_slice_as_u64(), 0);
     }
+
+    #[test]
+    fn kociemba_g1_is_zero() {
+        let mut cube = Cube::new();
+
+        cube.do_move_sequence(&vec![Move::Ux1, Move::Rx2, Move::Lx2]);
+        assert_eq!(cube.ud_slice_as_u64(), 0);
+
+        cube.do_move_sequence(&vec![Move::Dx3, Move::Fx2, Move::Bx2]);
+        assert_eq!(cube.ud_slice_as_u64(), 0);
+    }
 }
 
 mod sorted_ud_slice {
@@ -232,6 +243,17 @@ mod sorted_ud_slice {
         cube.do_move_sequence(&random_moves);
 
         assert!(!cube.is_solved());
+        assert_ne!(cube.sorted_ud_slice_as_u64(), 0);
+    }
+
+    #[test]
+    fn kociemba_g1_is_not_zero() {
+        let mut cube = Cube::new();
+
+        cube.do_move_sequence(&vec![Move::Ux1, Move::Rx2, Move::Lx2]);
+        assert_ne!(cube.sorted_ud_slice_as_u64(), 0);
+
+        cube.do_move_sequence(&vec![Move::Dx3, Move::Fx2, Move::Bx2]);
         assert_ne!(cube.sorted_ud_slice_as_u64(), 0);
     }
 }
