@@ -218,3 +218,20 @@ mod ud_slice {
         assert_ne!(cube.ud_slice_as_u64(), 0);
     }
 }
+
+mod sorted_ud_slice {
+    use super::*;
+
+    #[test]
+    fn solved_is_zero() {
+        let mut cube = Cube::new();
+
+        assert_eq!(cube.sorted_ud_slice_as_u64(), 0);
+
+        let random_moves = get_random_move_sequence(10);
+        cube.do_move_sequence(&random_moves);
+
+        assert!(!cube.is_solved());
+        assert_ne!(cube.sorted_ud_slice_as_u64(), 0);
+    }
+}

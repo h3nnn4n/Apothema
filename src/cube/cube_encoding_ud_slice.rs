@@ -7,6 +7,38 @@ fn choose(n: u64, k: u64) -> u64 {
 }
 
 impl Cube {
+    pub fn sorted_ud_slice_as_u64(&self) -> u64 {
+        let mut j: u64 = 0;
+        let mut x: u64 = 0;
+        let mut ud_edges = [Edge::UR; 4];
+
+        let edges = (0..12).into_iter().map(|key| Edge::from_u32(key).unwrap());
+
+        for edge_i in edges {
+            let edge = self.edges[edge_i as usize].e;
+
+            if edge == Edge::FR || edge == Edge::FL || edge == Edge::BL || edge == Edge::BR {
+                ud_edges[j as usize] = edge;
+
+                j += 1;
+            }
+        }
+
+        for j in (1..3).rev() {
+            let mut s: u64 = 0;
+
+            for k in (0..(j - 1)).rev() {
+                if ud_edges[k] > ud_edges[j] {
+                    s += 1;
+                }
+            }
+
+            x = (x + s) * (j as u64);
+        }
+
+        self.ud_slice_as_u64() * 24 + x
+    }
+
     pub fn ud_slice_as_u64(&self) -> u64 {
         let mut s: u64 = 0;
         let mut k: u64 = 3;
