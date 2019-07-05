@@ -13,6 +13,7 @@ mod move_sequence_utils;
 mod move_table;
 mod move_utils;
 mod print_move_table;
+mod cube_encoding_ud_slice;
 
 pub use benchmarks::{fixed_move_per_sec, random_move_per_sec};
 pub use cube_corner_encoding::*;
@@ -27,6 +28,7 @@ pub use move_sequence_types::*;
 pub use move_sequence_utils::*;
 pub use move_table::*;
 pub use move_utils::*;
+pub use cube_encoding_ud_slice::*;
 pub use print_move_table::{print_corner_move_table, print_edge_move_table};
 
 #[cfg(test)]

@@ -1,5 +1,4 @@
 use super::*;
-use num::FromPrimitive;
 
 impl Cube {
     pub fn cube_from_tuple(&mut self, (edge_i, corner_i): (u64, u64)) {

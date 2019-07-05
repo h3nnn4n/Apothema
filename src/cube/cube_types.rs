@@ -36,7 +36,7 @@ pub enum Corner {
 }}
 
 enum_from_primitive! {
-#[derive(Copy, Clone, PartialEq, Debug)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug)]
 pub enum Edge {
     UR,
     UF,
