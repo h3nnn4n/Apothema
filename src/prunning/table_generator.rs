@@ -70,7 +70,7 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
     }
 
     let t_current = Instant::now();
-    let t_diff = t_current.duration_since(t_timer);
+    let t_diff = t_current.duration_since(t_start);
 
     println!(
         "Finished building prunning table\ntime_elapsed {:4}.{:03}    visited {} nodes",
