@@ -4,6 +4,19 @@ mod as_u64 {
     use super::*;
 
     #[test]
+    fn solved_edge_permutation_is_zero() {
+        let mut cube = Cube::new();
+
+        assert_eq!(cube.edge_permutation_as_u64(), 0);
+
+        let random_moves = get_random_move_sequence(10);
+        cube.do_move_sequence(&random_moves);
+
+        assert!(!cube.is_solved());
+        assert_ne!(cube.edge_permutation_as_u64(), 0);
+    }
+
+    #[test]
     fn solved_edge_orientation_is_zero() {
         let cube = Cube::new();
 
@@ -15,6 +28,19 @@ mod as_u64 {
         let cube = Cube::new();
 
         assert_eq!(cube.corner_orientation_as_u64(), 0);
+    }
+
+    #[test]
+    fn solved_corner_permutation_is_zero() {
+        let mut cube = Cube::new();
+
+        assert_eq!(cube.corner_permutation_as_u64(), 0);
+
+        let random_moves = get_random_move_sequence(10);
+        cube.do_move_sequence(&random_moves);
+
+        assert!(!cube.is_solved());
+        assert_ne!(cube.corner_permutation_as_u64(), 0);
     }
 
     #[test]
