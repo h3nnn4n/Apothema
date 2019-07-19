@@ -1,13 +1,14 @@
-use std::time::{Duration, Instant};
-use std::collections::HashMap;
+use std::time::{Instant};
 use std::fs;
 use ron;
 
-pub fn store_table(table: HashMap<(u64, u64), u64>) {
+use super::*;
+
+pub fn store_table(prunning_tables: PrunningTables) {
     println!("Writing prunning table to disk");
     let t_start = Instant::now();
 
-    let data = ron::ser::to_string(&table).unwrap();
+    let data = ron::ser::to_string(&prunning_tables.edge_orientation).unwrap();
     let data_len = data.len();
     fs::write("table.ron", data).expect("Unable to write file");
 

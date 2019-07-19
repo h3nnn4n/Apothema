@@ -5,10 +5,11 @@ use std::collections::VecDeque;
 use std::time::{Duration, Instant};
 
 use crate::cube::{reduntant_move, Cube, Move};
+use super::*;
 
-pub fn build_edge_orientation_prunning_table() -> HashMap<(u64, u64), u64> {
+pub fn build_edge_orientation_prunning_table() -> PrunningTables {
     let mut queue: VecDeque<((u64, u64), Move, u64)> = VecDeque::new();
-    let mut prunning_table: HashMap<(u64, u64), u64> = HashMap::new();
+    let mut prunning_tables: PrunningTables = PrunningTables::new();
     let mut visited: HashSet<(u64, u64)> = HashSet::new();
 
     let mut cube = Cube::new();
@@ -62,7 +63,7 @@ pub fn build_edge_orientation_prunning_table() -> HashMap<(u64, u64), u64> {
                 if !visited.contains(&cube_tuple) {
                     queue.push_back((cube.cube_to_tuple(), mov, depth + 1));
                     visited.insert(cube_tuple);
-                    update_prunning_table(&mut prunning_table, &cube, depth);
+                    update_prunning_table(&mut prunning_tables, &cube, depth);
                 }
             }
         }
@@ -78,21 +79,26 @@ pub fn build_edge_orientation_prunning_table() -> HashMap<(u64, u64), u64> {
         visited.len(),
     );
 
-    prunning_table
+    prunning_tables
 }
 
-fn update_prunning_table(table: &mut HashMap<(u64, u64), u64>, cube: &Cube, depth: u64) {
+fn update_prunning_table(table: &mut PrunningTables, cube: &Cube, depth: u64) {
     let edge_orientation = cube.edge_orientation_as_u64();
     let key = (edge_orientation, 0);
+    let value = depth;
 
+    table_update(&mut table.edge_orientation, key, value);
+}
+
+fn table_update(table: &mut HashMap<(u64, u64), u64>, key: (u64, u64), value: u64) {
     if table.contains_key(&key) {
         let table_depth = table[&key];
 
-        if depth < table_depth {
-            table.insert(key, depth);
+        if value < table_depth {
+            table.insert(key, value);
         }
     } else {
-        table.insert(key, depth);
+        table.insert(key, value);
     }
 }
 
