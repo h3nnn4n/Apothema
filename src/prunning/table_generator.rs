@@ -5,7 +5,7 @@ use std::time::Instant;
 use crate::cube::{reduntant_move, Cube, Move};
 use super::*;
 
-pub fn build_edge_orientation_prunning_table() -> PrunningTables {
+pub fn build_prunning_tables() -> PrunningTables {
     let mut prunning_tables: PrunningTables = PrunningTables::new();
     let mut cube = Cube::new();
     let moves = (0..18).into_iter().map(|key| Move::from_u32(key).unwrap());

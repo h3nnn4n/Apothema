@@ -36,7 +36,7 @@ fn main() {
     let build_prunning = matches.is_present("BUILD_PRUNNING");
 
     if build_prunning {
-        let table = prunning::build_edge_orientation_prunning_table();
+        let table = prunning::build_prunning_tables();
         prunning::store_table(table);
     } else {
         demo();
