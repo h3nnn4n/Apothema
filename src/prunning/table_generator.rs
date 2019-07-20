@@ -8,34 +8,29 @@ use crate::cube::{reduntant_move, Cube, Move};
 use super::*;
 
 pub fn build_edge_orientation_prunning_table() -> PrunningTables {
-    let mut queue: VecDeque<((u64, u64), Move, u64)> = VecDeque::new();
     let mut prunning_tables: PrunningTables = PrunningTables::new();
-    let mut visited: HashSet<(u64, u64)> = HashSet::new();
-
     let mut cube = Cube::new();
-
     let moves = (0..18).into_iter().map(|key| Move::from_u32(key).unwrap());
 
-    queue.push_back((cube.cube_to_tuple(), Move::NOP, 0));
-
+    prunning_tables.state.queue.push_back((cube.cube_to_tuple(), Move::NOP, 0));
     prunning_tables.stats.start_timer();
 
     println!("Started building prunning table");
 
     loop {
-        prunning_tables.stats.tick();
+        prunning_tables.stats_tick();
 
-        if queue.len() == 0 {
+        if prunning_tables.state.queue.len() == 0 {
             panic!("Unsovable cube!");
         } else {
-            let (cube_i, last_move, depth) = queue.pop_front().unwrap();
+            let (cube_i, last_move, depth) = prunning_tables.state.queue.pop_front().unwrap();
 
-            if depth > prunning_tables.stats.max_depth {
-                prunning_tables.stats.max_depth = depth;
+            if depth > prunning_tables.state.max_depth {
+                prunning_tables.state.max_depth = depth;
 
-                prunning_tables.stats.print_status();
+                prunning_tables.print_status();
 
-                if prunning_tables.stats.max_depth > 4 {
+                if prunning_tables.state.max_depth > 4 {
                     break;
                 }
             }
@@ -50,9 +45,9 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
 
                 let cube_tuple = cube.cube_to_tuple();
 
-                if !visited.contains(&cube_tuple) {
-                    queue.push_back((cube_tuple, mov, depth + 1));
-                    visited.insert(cube_tuple);
+                if !prunning_tables.state.visited.contains(&cube_tuple) {
+                    prunning_tables.state.queue.push_back((cube_tuple, mov, depth + 1));
+                    prunning_tables.state.visited.insert(cube_tuple);
                     update_prunning_table(&mut prunning_tables, &cube, depth);
                 }
             }
@@ -62,14 +57,14 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
     let t_current = Instant::now();
     let t_diff = t_current.duration_since(prunning_tables.stats.t_start);
     let time = (t_diff.as_secs() as f64) + (t_diff.subsec_millis() as f64 / 1000.0);
-    let moves_per_sec = (visited.len() as f64) / time;
+    let moves_per_sec = (prunning_tables.state.visited.len() as f64) / time;
 
     println!();
     println!(
         "Finished building prunning table\ntime_elapsed {:4}.{:03}    visited {} nodes    moves_per_sec: {:8.0}",
         t_diff.as_secs(),
         t_diff.subsec_millis(),
-        visited.len(),
+        prunning_tables.state.visited.len(),
         moves_per_sec
     );
 
