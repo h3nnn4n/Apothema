@@ -18,6 +18,8 @@ pub struct Stats {
     pub t_start: Instant,
     pub t_timer: Instant,
     pub t_delta: Duration,
+
+    visited_nodes_size: VecDeque<(u64, Duration)>,
 }
 
 pub struct State {
@@ -41,6 +43,7 @@ impl PrunningTables {
 
     pub fn stats_tick(&mut self) {
         if self.stats.tick() {
+            self.stats.update_move_per_sec(self.state.visited.len() as u64);
             self.print_status();
         }
     }
@@ -48,16 +51,13 @@ impl PrunningTables {
     pub fn print_status(&self) {
         let t_diff = self.stats.get_elapsed_time();
 
-        let time = (t_diff.as_secs() as f64) + (t_diff.subsec_millis() as f64 / 1000.0);
-        let moves_per_sec = (self.state.visited.len() as f64) / time;
-
         println!(
             "time_elapsed: {:4}.{:03}    depth: {:2}    visited {:9} nodes    moves_per_sec: {:8.0}  table_size (EO,CO,EP,CP): {:5} {:5} {:9} {:6}",
             t_diff.as_secs(),
             t_diff.subsec_millis(),
             self.state.max_depth,
             self.state.visited.len(),
-            moves_per_sec,
+            self.stats.moves_per_sec(),
             self.edge_orientation.len(),
             self.corner_orientation.len(),
             self.edge_permutation.len(),
@@ -72,6 +72,7 @@ impl Stats {
             t_start: Instant::now(),
             t_timer: Instant::now(),
             t_delta: Duration::from_millis(1000),
+            visited_nodes_size: VecDeque::new(),
         }
     }
 
@@ -89,6 +90,10 @@ impl Stats {
             return true
         }
 
+        if self.visited_nodes_size.len() > 10 {
+            self.visited_nodes_size.pop_front();
+        }
+
         false
     }
 
@@ -97,6 +102,37 @@ impl Stats {
         let t_diff = t_current.duration_since(self.t_start);
 
         t_diff
+    }
+
+    pub fn update_move_per_sec(&mut self, nodes_size: u64) {
+        let data = (nodes_size, self.get_elapsed_time());
+
+        self.visited_nodes_size.push_back(data);
+    }
+
+    pub fn  moves_per_sec(&self) -> u64 {
+        if self.visited_nodes_size.len() == 0 {
+            return 0;
+        }
+
+        let front = self.visited_nodes_size.front().unwrap();
+        let back = self.visited_nodes_size.back().unwrap();
+
+        let duration_front = front.1;
+        let duration_back = back.1;
+
+        let duration_diff = duration_back - duration_front;
+
+        let move_diff = (back.0 - front.0) as f64;
+
+        let time = (duration_diff.as_secs() as f64) + (duration_diff.subsec_millis() as f64 / 1000.0);
+        let moves_per_sec = move_diff / time;
+
+        if time == 0.0 {
+            return 0;
+        }
+
+        moves_per_sec as u64
     }
 }
 

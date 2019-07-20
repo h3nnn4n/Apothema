@@ -28,7 +28,7 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
 
                 prunning_tables.print_status();
 
-                if prunning_tables.state.max_depth > 6 {
+                if prunning_tables.state.max_depth > 5 {
                     break;
                 }
             }
