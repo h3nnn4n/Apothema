@@ -2,7 +2,7 @@ use num::FromPrimitive;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::collections::VecDeque;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use crate::cube::{reduntant_move, Cube, Move};
 use super::*;
@@ -13,39 +13,29 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
     let mut visited: HashSet<(u64, u64)> = HashSet::new();
 
     let mut cube = Cube::new();
-    let mut max_depth = 0;
 
     let moves = (0..18).into_iter().map(|key| Move::from_u32(key).unwrap());
 
     queue.push_back((cube.cube_to_tuple(), Move::NOP, 0));
 
+    prunning_tables.stats.start_timer();
+
     println!("Started building prunning table");
 
-    let t_start = Instant::now();
-    let mut t_timer = t_start;
-    let t_delta = Duration::from_millis(1000);
-
     loop {
-        let t_current = Instant::now();
-        let t_diff = t_current.duration_since(t_timer);
+        prunning_tables.stats.tick();
 
-        if t_diff > t_delta {
-            t_timer = Instant::now();
-            let time_elapsed = t_current.duration_since(t_start);
-            print_status(&queue, &visited, time_elapsed, max_depth);
-        }
         if queue.len() == 0 {
             panic!("Unsovable cube!");
         } else {
             let (cube_i, last_move, depth) = queue.pop_front().unwrap();
 
-            if depth > max_depth {
-                max_depth = depth;
+            if depth > prunning_tables.stats.max_depth {
+                prunning_tables.stats.max_depth = depth;
 
-                let time_elapsed = t_current.duration_since(t_start);
-                print_status(&queue, &visited, time_elapsed, max_depth);
+                prunning_tables.stats.print_status();
 
-                if max_depth > 4 {
+                if prunning_tables.stats.max_depth > 4 {
                     break;
                 }
             }
@@ -70,7 +60,7 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
     }
 
     let t_current = Instant::now();
-    let t_diff = t_current.duration_since(t_start);
+    let t_diff = t_current.duration_since(prunning_tables.stats.t_start);
     let time = (t_diff.as_secs() as f64) + (t_diff.subsec_millis() as f64 / 1000.0);
     let moves_per_sec = (visited.len() as f64) / time;
 
@@ -136,24 +126,4 @@ fn table_update(table: &mut HashMap<(u64, u64), u64>, key: (u64, u64), value: u6
     } else {
         table.insert(key, value);
     }
-}
-
-fn print_status(
-    queue: &VecDeque<((u64, u64), Move, u64)>,
-    visited: &HashSet<(u64, u64)>,
-    t_diff: std::time::Duration,
-    max_depth: u64,
-) {
-    let time = (t_diff.as_secs() as f64) + (t_diff.subsec_millis() as f64 / 1000.0);
-    let moves_per_sec = (visited.len() as f64) / time;
-
-    println!(
-        "time_elapsed: {:4}.{:03}    depth: {:2}    nodes_visited: {:12}    queue_size: {:12}    moves_per_sec: {:8.0}",
-        t_diff.as_secs(),
-        t_diff.subsec_millis(),
-        max_depth,
-        visited.len(),
-        queue.len(),
-        moves_per_sec
-    );
 }
