@@ -1,7 +1,5 @@
 use num::FromPrimitive;
 use std::collections::HashMap;
-use std::collections::HashSet;
-use std::collections::VecDeque;
 use std::time::Instant;
 
 use crate::cube::{reduntant_move, Cube, Move};
@@ -30,7 +28,7 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
 
                 prunning_tables.print_status();
 
-                if prunning_tables.state.max_depth > 4 {
+                if prunning_tables.state.max_depth > 6 {
                     break;
                 }
             }

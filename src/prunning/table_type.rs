@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 use std::collections::VecDeque;
 use std::time::{Duration, Instant};
-use crate::cube::{Cube, Move};
+use crate::cube::Move;
 
 pub struct PrunningTables {
     pub edge_orientation: HashMap<(u64, u64), u64>,
@@ -52,12 +52,16 @@ impl PrunningTables {
         let moves_per_sec = (self.state.visited.len() as f64) / time;
 
         println!(
-            "time_elapsed: {:4}.{:03}    depth: {:2}    visited {:9} nodes    moves_per_sec: {:8.0}",
+            "time_elapsed: {:4}.{:03}    depth: {:2}    visited {:9} nodes    moves_per_sec: {:8.0}  table_size (EO,CO,EP,CP): {:5} {:5} {:9} {:6}",
             t_diff.as_secs(),
             t_diff.subsec_millis(),
             self.state.max_depth,
             self.state.visited.len(),
-            moves_per_sec
+            moves_per_sec,
+            self.edge_orientation.len(),
+            self.corner_orientation.len(),
+            self.edge_permutation.len(),
+            self.corner_permutation.len(),
         );
     }
 }
@@ -90,7 +94,7 @@ impl Stats {
 
     pub fn get_elapsed_time(&self) -> Duration {
         let t_current = Instant::now();
-        let t_diff = t_current.duration_since(self.t_timer);
+        let t_diff = t_current.duration_since(self.t_start);
 
         t_diff
     }
