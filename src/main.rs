@@ -28,7 +28,7 @@ fn main() {
         .arg(
             Arg::with_name("BUILD_PRUNNING")
                 .short("-p")
-                .long("--build-prunning")
+                .long("--build-prunning-tables")
                 .help("Builds the prunning tables"),
         )
         .get_matches();

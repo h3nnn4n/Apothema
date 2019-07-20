@@ -61,7 +61,7 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
                 let cube_tuple = cube.cube_to_tuple();
 
                 if !visited.contains(&cube_tuple) {
-                    queue.push_back((cube.cube_to_tuple(), mov, depth + 1));
+                    queue.push_back((cube_tuple, mov, depth + 1));
                     visited.insert(cube_tuple);
                     update_prunning_table(&mut prunning_tables, &cube, depth);
                 }
@@ -71,23 +71,59 @@ pub fn build_edge_orientation_prunning_table() -> PrunningTables {
 
     let t_current = Instant::now();
     let t_diff = t_current.duration_since(t_start);
+    let time = (t_diff.as_secs() as f64) + (t_diff.subsec_millis() as f64 / 1000.0);
+    let moves_per_sec = (visited.len() as f64) / time;
 
+    println!();
     println!(
-        "Finished building prunning table\ntime_elapsed {:4}.{:03}    visited {} nodes",
+        "Finished building prunning table\ntime_elapsed {:4}.{:03}    visited {} nodes    moves_per_sec: {:8.0}",
         t_diff.as_secs(),
         t_diff.subsec_millis(),
         visited.len(),
+        moves_per_sec
     );
 
     prunning_tables
 }
 
 fn update_prunning_table(table: &mut PrunningTables, cube: &Cube, depth: u64) {
+    update_edge_orientation(table, cube, depth);
+    update_corner_orientation(table, cube, depth);
+
+    update_edge_permutation(table, cube, depth);
+    update_corner_permutation(table, cube, depth);
+}
+
+pub fn update_edge_orientation(table: &mut PrunningTables,cube: &Cube, depth: u64) {
     let edge_orientation = cube.edge_orientation_as_u64();
     let key = (edge_orientation, 0);
     let value = depth;
 
     table_update(&mut table.edge_orientation, key, value);
+}
+
+pub fn update_corner_orientation(table: &mut PrunningTables,cube: &Cube, depth: u64) {
+    let corner_orientation = cube.corner_orientation_as_u64();
+    let key = (corner_orientation, 0);
+    let value = depth;
+
+    table_update(&mut table.corner_orientation, key, value);
+}
+
+pub fn update_edge_permutation(table: &mut PrunningTables,cube: &Cube, depth: u64) {
+    let edge_permutation = cube.edge_permutation_as_u64();
+    let key = (edge_permutation, 0);
+    let value = depth;
+
+    table_update(&mut table.edge_permutation, key, value);
+}
+
+pub fn update_corner_permutation(table: &mut PrunningTables,cube: &Cube, depth: u64) {
+    let corner_permutation = cube.corner_permutation_as_u64();
+    let key = (corner_permutation, 0);
+    let value = depth;
+
+    table_update(&mut table.corner_permutation, key, value);
 }
 
 fn table_update(table: &mut HashMap<(u64, u64), u64>, key: (u64, u64), value: u64) {
